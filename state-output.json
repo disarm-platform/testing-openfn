@@ -1,0 +1,13 @@
+{
+  "references": [
+    {
+      "nothing": false
+    }
+  ],
+  "data": {
+    "a": true,
+    "b": true,
+    "c": "sometime"
+  },
+  "configuration": {}
+}
