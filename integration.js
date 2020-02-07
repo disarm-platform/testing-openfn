@@ -6,14 +6,14 @@ execute(
     state => {
       const dataSetId = state.data.dataSets[0].id;
       const orgUnitIds = state.data.organisationUnits.filter(i => i.hasOwnProperty('parent')).map(i => i.id);
-      const orgUnitParams = orgUnitIds.map(i => `&orgUnit=${i}`).join('');
-      state.configuration.dataValueSetsUrl = `${state.configuration.dhis2_root_url}/api/dataValueSets.json?dataSet=${dataSetId}&period=${state.configuration.static_period}${orgUnitParams}`;
+      const orgUnitParams = orgUnitIds.slice(0,2).map(i => `&orgUnit=${i}`).join('');
+      state.configuration.dataValueSetsUrl = `${state.configuration.dhis2_root_url}/api/dataValueSets.json?dataSet=${dataSetId}&period=${state.configuration.static_period}`;//${orgUnitParams}`;
       return state;
     }
   ),
 
   // get datavalues
-  get(state.configuration.dataValueSetsUrl, { headers: state.configuration.headers }, state => {
+  get(`${state.configuration.dataValueSetsUrl}`, { headers: state.configuration.headers }, state => {
     const rawOrgUnits = state.references[0].organisationUnits;
     const rawDataElements = state.references[0].dataElements;
 
@@ -68,6 +68,11 @@ execute(
     state.data.orgUnitsGeoJSON = orgUnitsGeoJSON;
     return state;
   })
+
+
+
+
+
 
   // // post to disarm
   // post(state.configuration.disarm_api_url, {
