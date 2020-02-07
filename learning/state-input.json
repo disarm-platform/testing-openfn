@@ -1,0 +1,13 @@
+{
+  "data": {
+    "original": true
+  },
+  "configuration": {
+    "remote_url": "http://localhost:5000/a.json",
+    "remote_params": {
+      "headers": {
+        "ContentType": "application/json"
+      }
+    }
+  }
+}

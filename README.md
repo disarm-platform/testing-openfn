@@ -1,4 +1,6 @@
-## Figuring out the OpenFn runtime
+# Figuring out the OpenFn runtime
+
+## Setup
 
 1. Install the *OpenFn* [`devtools`](https://github.com/OpenFn/openfn-devtools):
     ```sh
@@ -10,6 +12,10 @@
     git clone https://github.com/OpenFn/language-http.git && cd language-http && npm i && cd ..
     ```
     This will install `language-common` as a dependency.
+
+## Run the demo
+
+1. `cd learning`
 2. Serve the `a.json` file as an example remote API - e.g. using `npx serve`.
 2. Run: 
     ```sh
