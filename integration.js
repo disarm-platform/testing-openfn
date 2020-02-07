@@ -6,70 +6,75 @@ execute(
     state => {
       const dataSetId = state.data.dataSets[0].id;
       const orgUnitIds = state.data.organisationUnits.filter(i => i.hasOwnProperty('parent')).map(i => i.id);
-      const orgUnitParams = orgUnitIds.slice(0,2).map(i => `&orgUnit=${i}`).join('');
+      const orgUnitParams = orgUnitIds.map(i => `&orgUnit=${i}`).join('');
       state.configuration.dataValueSetsUrl = `${state.configuration.dhis2_root_url}/api/dataValueSets.json?dataSet=${dataSetId}&period=${state.configuration.static_period}`;//${orgUnitParams}`;
-      return state;
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(state)
+        }, 5000);
+      }).then(state => {
+        setTimeout((state) => {
+          return state;
+        }, 5000);
+      });
     }
-  ),
-
+  )
   // get datavalues
-  get(`${state.configuration.dataValueSetsUrl}`, { headers: state.configuration.headers }, state => {
-    const rawOrgUnits = state.references[0].organisationUnits;
-    const rawDataElements = state.references[0].dataElements;
+  // get(`${state.configuration.dataValueSetsUrl}`, { headers: state.configuration.headers }, state => {
+  //   const rawOrgUnits = state.references[0].organisationUnits;
+  //   const rawDataElements = state.references[0].dataElements;
 
 
-    // Create GeoJSON of OrgUnits
-    const orgUnitsFeatures = rawOrgUnits.filter(i => i.hasOwnProperty('parent')).map(i => {
-      return {
-        type: 'Feature',
-        properties: {
-          id: i.id,
-          orgUnit_id: i.id,
-          orgUnit_name: i.name,
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: i.geometry.coordinates,
-        }
-      };
-    });
+  //   // Create GeoJSON of OrgUnits
+  //   const orgUnitsFeatures = rawOrgUnits.filter(i => i.hasOwnProperty('parent')).map(i => {
+  //     return {
+  //       type: 'Feature',
+  //       properties: {
+  //         id: i.id,
+  //         orgUnit_id: i.id,
+  //         orgUnit_name: i.name,
+  //       },
+  //       geometry: {
+  //         type: 'Point',
+  //         coordinates: i.geometry.coordinates,
+  //       }
+  //     };
+  //   });
 
 
-    // Create lookup for dataElement renaming
-    const dataElementLookup = rawDataElements.reduce((acc, i) => {
-      acc[i.id] = i.name;
-      acc[i.name] = i.id;
-      return acc;
-    }, {});
+  //   // Create lookup for dataElement renaming
+  //   const dataElementLookup = rawDataElements.reduce((acc, i) => {
+  //     acc[i.id] = i.name;
+  //     acc[i.name] = i.id;
+  //     return acc;
+  //   }, {});
 
 
-    // Reshape for DiSARM
-    const iterate_this = state.data.dataValues;
-    iterate_this.forEach((d) => {
-      const found_orgUnit = orgUnitsFeatures.find(o => o.properties.orgUnit_id === d.orgUnit);
-      if (!found_orgUnit) {
-        console.error('Cannot find orgUnit for', d);
-        return;
-      }
-      const found_dataElement = dataElementLookup[d.dataElement];
-      if (!found_dataElement) {
-        console.error('Cannot find dataElement for', d);
-        return;
-      }
-      const value = Math.parseFloat(d.value);
-      found_orgUnit.properties[found_dataElement] = value;
-    });
+  //   // Reshape for DiSARM
+  //   const iterate_this = state.data.dataValues;
+  //   iterate_this.forEach((d) => {
+  //     const found_orgUnit = orgUnitsFeatures.find(o => o.properties.orgUnit_id === d.orgUnit);
+  //     if (!found_orgUnit) {
+  //       console.error('Cannot find orgUnit for', d);
+  //       return;
+  //     }
+  //     const found_dataElement = dataElementLookup[d.dataElement];
+  //     if (!found_dataElement) {
+  //       console.error('Cannot find dataElement for', d);
+  //       return;
+  //     }
+  //     const value = Math.parseFloat(d.value);
+  //     found_orgUnit.properties[found_dataElement] = value;
+  //   });
 
-    const orgUnitsGeoJSON = {
-      type: 'FeatureCollection',
-      features: orgUnitsFeatures,
-    };
+  //   const orgUnitsGeoJSON = {
+  //     type: 'FeatureCollection',
+  //     features: orgUnitsFeatures,
+  //   };
 
-    state.data.orgUnitsGeoJSON = orgUnitsGeoJSON;
-    return state;
-  })
-
-
+  //   state.data.orgUnitsGeoJSON = orgUnitsGeoJSON;
+  //   return state;
+  // })
 
 
 

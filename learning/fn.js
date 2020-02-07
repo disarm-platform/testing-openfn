@@ -8,13 +8,18 @@ execute(
   // get(state.configuration.remote_url, {}, (state) => {
   //   return state;
   // }),
-  alterState((state) => {
-    // state.data.goodbye = 'goodbye';
-    state.data.remote_url = 'http://localhost:5000/b.json';
-    return state;
-  }),
-  get(state.data.remote_url, state.configuration.remote_params, (state) => {
-    return state;
+  // alterState((state) => {
+  //   // state.data.goodbye = 'goodbye';
+  //   state.data.remote_url = 'http://localhost:5000/b.json';
+  //   return state;
+  // }),
+  get(state.configuration.remote_url, {}, state => {
+    // return Promise.resolve(state);
+    return new Promise((resolve, reject) => {
+      get(state.configuration.remote_url, {}, state => {
+      })
+      resolve(state);
+    });
   })
 )
 
